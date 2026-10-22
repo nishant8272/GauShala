@@ -324,24 +324,29 @@ export function ChatSidebar({
         <div
           className={cn(
             "p-3 flex flex-col gap-2 border-t border-border/40",
-            isCollapsed && "hidden md:flex items-center"
+            isCollapsed && "hidden md:flex items-center px-2"
           )}
         >
           <Link
             href="/"
             onClick={onCloseMobile}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:bg-slate-200/60 dark:hover:bg-white/5 transition border border-slate-200 dark:border-zinc-800"
+            title="Return to Home"
+            className={cn(
+              "w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:bg-slate-200/60 dark:hover:bg-white/5 transition border border-slate-200 dark:border-zinc-800",
+              isCollapsed ? "justify-center px-0" : "justify-center"
+            )}
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Return to Home</span>
+            <ArrowLeft className="w-4 h-4 shrink-0" />
+            {!isCollapsed && <span>Return to Home</span>}
           </Link>
 
           <button
             className={cn(
               "w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-700 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5 transition-colors font-semibold cursor-pointer",
-              isCollapsed && "justify-center"
+              isCollapsed && "justify-center px-0"
             )}
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            title={theme === "dark" ? "Light Mode" : "Dark Mode"}
           >
             {theme === "dark" ? (
               <Sun className="h-4 w-4 shrink-0 text-amber-400" />

@@ -110,7 +110,7 @@ export default function ChatbotPage() {
     }
     const switched = lastChatId.current !== activeChatId;
     lastChatId.current = activeChatId;
-    messagesEndRef.current?.scrollIntoView({ behavior: switched ? "auto" : "smooth" });
+    el.scrollTo({ top: el.scrollHeight, behavior: switched ? "auto" : "smooth" });
   }, [lastMessageId, isLoading, activeChatId, messages.length]);
 
   const handleScroll = () => {
@@ -223,7 +223,7 @@ export default function ChatbotPage() {
       />
 
       {/* Main Chat Workspace */}
-      <main className="flex-1 flex flex-col h-full min-w-0 bg-background dark:bg-black overflow-hidden relative">
+      <main className="flex-1 flex flex-col h-full min-w-0 bg-background dark:bg-black overflow-hidden">
         {/* Top Navbar Header */}
         <div className="h-14 flex-shrink-0 flex items-center justify-between px-3 md:px-6 bg-background dark:bg-black border-b border-border/40">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -268,7 +268,7 @@ export default function ChatbotPage() {
         </div>
 
         {/* Scrollable Messages Area */}
-        <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto w-full p-4 md:p-6 pb-36">
+        <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto w-full p-4 md:p-6 pb-6">
           {showSkeleton ? (
             <div className="pt-6 space-y-8 max-w-3xl mx-auto px-4" aria-busy="true">
               {[0, 1, 2].map((i) => (
@@ -328,8 +328,8 @@ export default function ChatbotPage() {
           )}
         </div>
 
-        {/* Floating Input Area Wrapper */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/95 to-transparent pt-8 pb-4 px-3 md:px-6">
+        {/* Input Area */}
+        <div className="flex-shrink-0 bg-background/95 dark:bg-black/95 border-t border-border/40 pt-3 pb-3 px-3 md:px-6">
           <div className="max-w-3xl mx-auto">
             <ChatInputArea onSendMessage={handleSendMessage} isLoading={Boolean(pendingChatId)} />
           </div>

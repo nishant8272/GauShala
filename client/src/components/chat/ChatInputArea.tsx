@@ -37,7 +37,7 @@ export function ChatInputArea({ onSendMessage, isLoading }: ChatInputAreaProps) 
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 pb-2 md:pb-6 relative">
+    <div className="w-full relative">
       <div className="relative flex flex-col w-full bg-muted/70 dark:bg-zinc-900/95 rounded-[26px] border border-border/60 dark:border-zinc-800 focus-within:ring-1 focus-within:ring-emerald-500/50 shadow-xl transition-all">
         <textarea
           ref={textareaRef}
@@ -74,7 +74,7 @@ export function ChatInputArea({ onSendMessage, isLoading }: ChatInputAreaProps) 
           </Button>
         </div>
       </div>
-      <div className="text-center mt-3 text-xs text-muted-foreground">
+      <div className="text-center mt-2 text-[11px] sm:text-xs text-muted-foreground">
         Cattle GPT can make mistakes. Verify critical cattle health guidance.
       </div>
     </div>
