@@ -26,4 +26,20 @@ const isProduction = process.env.NODE_ENV !== "development";
     const { setupVite } = await import("./vite");
     await setupVite(server, app);
   }
+
+  // Automated keep-alive pinger for Render free tier deployment using HEAD method
+  const externalUrl = process.env.RENDER_EXTERNAL_URL || process.env.APP_URL;
+  if (externalUrl) {
+    const pingUrl = externalUrl.replace(/\/$/, "") + "/health";
+    const PING_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes (Render spins down after 15 min)
+    setInterval(async () => {
+      try {
+        await fetch(pingUrl, { method: "HEAD" });
+        log(`[keep-alive] HEAD ping sent to ${pingUrl}`);
+      } catch (err: any) {
+        log(`[keep-alive] HEAD ping warning: ${err?.message || err}`);
+      }
+    }, PING_INTERVAL_MS);
+    log(`[keep-alive] Automated HEAD keep-alive scheduled for ${pingUrl} (every 10 min)`);
+  }
 })();

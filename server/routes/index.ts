@@ -19,6 +19,20 @@ apiRouter.get("/config", (_req, res) => {
   });
 });
 
+// Lightweight health check & keep-alive endpoints (accessible without DB overhead)
+apiRouter.get("/health", (_req, res) => {
+  res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+apiRouter.head("/health", (_req, res) => {
+  res.status(200).end();
+});
+apiRouter.get("/ping", (_req, res) => {
+  res.status(200).send("pong");
+});
+apiRouter.head("/ping", (_req, res) => {
+  res.status(200).end();
+});
+
 // Apply auth/user extraction context to all API endpoints
 apiRouter.use(extractUser);
 
@@ -30,12 +44,14 @@ apiRouter.use("/teleconsult", teleconsultRouter);
 apiRouter.use("/cattle", cattleRouter);
 apiRouter.use("/animals", animalRouter);
 
-// Health check endpoint
-apiRouter.get("/health", (_req, res) => {
-  res.json({ status: "healthy", timestamp: new Date().toISOString() });
-});
-
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Direct HEAD keep-alive handlers on top-level app
+  app.head("/", (_req, res) => res.status(200).end());
+  app.head("/health", (_req, res) => res.status(200).end());
+  app.head("/api/health", (_req, res) => res.status(200).end());
+  app.head("/ping", (_req, res) => res.status(200).end());
+  app.head("/api/ping", (_req, res) => res.status(200).end());
+
   // Public config endpoint directly on app as well
   app.get("/api/config", (_req, res) => {
     res.json({
