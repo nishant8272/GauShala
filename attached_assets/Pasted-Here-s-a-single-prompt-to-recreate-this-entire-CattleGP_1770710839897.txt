@@ -1,0 +1,20 @@
+Here's a single prompt to recreate this entire CattleGPT landing page:
+
+---
+
+**"Build a landing page for CattleGPT, an AI-powered cattle health management platform for Indian farmers and veterinarians. Use a bold agri-tech aesthetic with deep greens, warm ambers, and earthy tones. Use Playfair Display for headings and DM Sans for body text.
+
+**Navbar:** Fixed top nav with 🐄 CattleGPT logo, links (Features, Find a Vet, Emergency, For Vets), and Log In / Get Started buttons. Responsive with mobile hamburger menu.
+
+**Hero:** Full-viewport section with a background image of a farmer with cattle at golden hour. Dark gradient overlay from left. Headline: "Smarter Care for Every Animal" with accent color on "Every Animal". Subtext about AI health insights, vet access, and WhatsApp support. Two CTAs: "Start Free" (primary) and "Try on WhatsApp" (black). Checkmarks: Free to start, Voice support, Regional languages.
+
+**Features:** 5 cards in a 3-column grid with staggered scroll-in animations (framer-motion). Each card has an icon, title, description, and bullet points. Four cards (AI Chatbot, Animal Records, Find a Vet, Emergency Services) have background images with gradient overlays. Cards: (1) CattleGPT AI Chatbot – Web/WhatsApp, NLP, voice, ear tag & muzzle queries. (2) Your Animals – ear tag, muzzle recognition, health/vaccination/milk records, AI disease prediction. (3) Find a Vet – GPS search, specialisation filters, ratings. (4) Help & Advisory – disease database, govt DAHD schemes, awareness content. (5) Emergency Services – nearest clinic, home visits, MVU helpline, critical alerts.
+
+**CTA Section:** Green primary background, headline "Ready to Transform Your Cattle Care?", two buttons: "Get Started Free" (secondary) and "Register as a Vet" (black).
+
+**Footer:** Dark background, 4-column layout: logo + tagline, Platform links, For Vets links, Resources links. Copyright line mentioning DAHD & Digital India."**
+
+---
+
+Add testimonials section
+Add How It Works section

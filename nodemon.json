@@ -1,0 +1,7 @@
+{
+  "watch": ["server"],
+  "ext": "ts,json",
+  "ignore": ["client/*", "dist/*", "node_modules/*", ".git/*", "uploads/*"],
+  "exec": "tsx server/index.ts",
+  "delay": "500"
+}

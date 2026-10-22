@@ -1,0 +1,181 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.VarChar
+  username  String   @unique
+  password  String
+  role      String   @default("user")
+
+  doctorProfile DoctorProfile?
+  doctor        Doctor?
+  appointments  Appointment[]
+  animals       AnimalRecord[]
+
+  @@map("users")
+}
+
+model DoctorProfile {
+  id                  String   @id @default(uuid()) @db.VarChar
+  userId              String   @unique @map("user_id") @db.VarChar
+  status              String   @default("pending")
+  isAvailable         Boolean  @default(false) @map("is_available")
+  onboardingStep      Int      @default(1) @map("onboarding_step")
+  licenseNumber       String   @map("license_number")
+  specialization      String
+  qualification       String
+  experienceYears     Int      @default(1) @map("experience_years")
+  consultationFee     Decimal  @default(500.00) @map("consultation_fee") @db.Decimal(10, 2)
+  hospitalAffiliation String?  @map("hospital_affiliation")
+  languages           String[] @default(["English", "Hindi"])
+  bio                 String?
+  city                String?
+  rating              Decimal  @default(0.00) @db.Decimal(3, 2)
+  totalConsultations  Int      @default(0) @map("total_consultations")
+  totalEarnings       Decimal  @default(0.00) @map("total_earnings") @db.Decimal(12, 2)
+  rejectionReason     String?  @map("rejection_reason")
+  subscriptionStatus  String   @default("unpaid") @map("subscription_status")
+  subscriptionExpiresAt DateTime? @map("subscription_expires_at") @db.Timestamptz
+  subscriptionOrderId   String?   @map("subscription_order_id")
+  subscriptionPaymentId String?   @map("subscription_payment_id")
+  subscribedAt          DateTime? @map("subscribed_at") @db.Timestamptz
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctor    Doctor?
+  documents DoctorDocument[]
+
+  @@map("doctor_profiles")
+}
+
+model DoctorDocument {
+  id              String   @id @default(uuid()) @db.VarChar
+  doctorProfileId String   @map("doctor_profile_id") @db.VarChar
+  documentType    String   @map("document_type")
+  fileName        String   @map("file_name")
+  mimeType        String   @map("mime_type")
+  fileUrl         String   @map("file_url")
+  dataBase64      String?  @map("data_base64")
+  uploadedAt      DateTime @default(now()) @map("uploaded_at") @db.Timestamptz
+
+  doctorProfile DoctorProfile @relation(fields: [doctorProfileId], references: [id], onDelete: Cascade)
+
+  @@map("doctor_documents")
+}
+
+model Doctor {
+  id              String   @id @default(uuid()) @db.VarChar
+  doctorProfileId String   @unique @map("doctor_profile_id") @db.VarChar
+  userId          String   @unique @map("user_id") @db.VarChar
+  name            String
+  specialization  String
+  qualification   String?
+  experienceYears Int      @default(1) @map("experience_years")
+  consultationFee Decimal  @default(500.00) @map("consultation_fee") @db.Decimal(10, 2)
+  isAvailable     Boolean  @default(true) @map("is_available")
+  languages       String[] @default(["English", "Hindi"])
+  bio             String?
+  avatarUrl       String?  @map("avatar_url")
+  rating          Decimal  @default(4.50) @db.Decimal(3, 2)
+  nextAvailable   String?  @default("Today") @map("next_available")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctorProfile DoctorProfile @relation(fields: [doctorProfileId], references: [id], onDelete: Cascade)
+  appointments  Appointment[]
+
+  @@map("doctors")
+}
+
+model Appointment {
+  id               String   @id @default(uuid()) @db.VarChar
+  patientId        String   @map("patient_id") @db.VarChar
+  doctorId         String   @map("doctor_id") @db.VarChar
+  scheduledAt      DateTime @map("scheduled_at") @db.Timestamptz
+  status           String   @default("pending")
+  consultationType String   @default("clinic_visit") @map("consultation_type")
+  symptoms         String?
+  prescription     String?
+  meetingLink      String?  @map("meeting_link")
+  roomId           String?  @map("room_id")
+  fee              Decimal  @default(500.00) @db.Decimal(10, 2)
+  paymentStatus    String   @default("unpaid") @map("payment_status")
+  razorpayOrderId  String?  @map("razorpay_order_id")
+  razorpayPaymentId String? @map("razorpay_payment_id")
+  paidAt           DateTime? @map("paid_at") @db.Timestamptz
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  patient User   @relation(fields: [patientId], references: [id])
+  doctor  Doctor @relation(fields: [doctorId], references: [id])
+
+  @@map("appointments")
+}
+
+model CattleSensorRecord {
+  id            String    @id @default(uuid()) @db.VarChar
+  spreadsheetId String    @map("spreadsheet_id")
+  sheetName     String    @default("Sheet1") @map("sheet_name")
+  rowNumber     Int       @map("row_number")
+  cowId         String    @default("COW-01") @map("cow_id")
+  recordedAt    DateTime? @map("recorded_at") @db.Timestamptz
+  rawTimestamp  String    @map("raw_timestamp")
+  motion        Int       @default(0)
+  countX        Int       @default(0) @map("count_x")
+  countY        Int       @default(0) @map("count_y")
+  countZ        Int       @default(0) @map("count_z")
+  spo2          Decimal?  @db.Decimal(5, 2)
+  heartRate     Decimal?  @map("heart_rate") @db.Decimal(5, 2)
+  status        String    @default("Normal")
+  auxData       String?   @map("aux_data")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("cattle_sensor_records")
+}
+
+model SyncCheckpoint {
+  id                  String    @id @default(uuid()) @db.VarChar
+  sourceKey           String    @unique @map("source_key")
+  spreadsheetId       String    @map("spreadsheet_id")
+  sheetName           String    @default("Sheet1") @map("sheet_name")
+  lastSyncedRow       Int       @default(1) @map("last_synced_row")
+  lastSyncedTimestamp String?   @map("last_synced_timestamp")
+  totalRowsSynced     Int       @default(0) @map("total_rows_synced")
+  lastSyncStatus      String    @default("idle") @map("last_sync_status")
+  lastSyncMessage     String?   @map("last_sync_message")
+  lastSyncedAt        DateTime? @map("last_synced_at") @db.Timestamptz
+  configJson          String?   @map("config_json")
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("sync_checkpoints")
+}
+
+model AnimalRecord {
+  id              String   @id @default(uuid()) @db.VarChar
+  userId          String   @map("user_id") @db.VarChar
+  tagId           String   @map("tag_id")
+  name            String
+  breed           String
+  species         String   @default("Cow")
+  age             String
+  milkYield       String   @map("milk_yield")
+  status          String   @default("Healthy")
+  vaccinationDate String?  @map("vaccination_date")
+  ownerNotes      String?  @map("owner_notes")
+  lastUpdate      String   @default("Just now") @map("last_update")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("animal_records")
+}
